@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { firstValueFrom } from 'rxjs';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 
@@ -7,8 +8,18 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 export class MoviesService {
   constructor(private readonly httpService: HttpService) {}
 
-  search(query: string) {
-    return 'yeah';
+  async search(query: string): Promise<any> {
+    const { data } = await firstValueFrom(
+      this.httpService.get(
+        `https://api.themoviedb.org/3/search/movie?query=${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+          },
+        },
+      ),
+    );
+    return data;
   }
 
   create(createMovieDto: CreateMovieDto) {
