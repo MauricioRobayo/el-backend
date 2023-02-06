@@ -12,11 +12,6 @@ export class MoviesService {
     const { data } = await firstValueFrom(
       this.httpService.get(
         `https://api.themoviedb.org/3/search/movie?query=${query}`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-          },
-        },
       ),
     );
     return data;
