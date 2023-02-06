@@ -28,8 +28,13 @@ export class TmdbApiService implements MovieApi {
   search(query: SearchMovieDto): Promise<SearchMovieResultDto> {
     const searchParams = new URLSearchParams({
       query: query.query,
-      language: query.language,
     });
+    if (query.language) {
+      searchParams.append('language', query.language);
+    }
+    if (query.page) {
+      searchParams.append('page', String(query.page));
+    }
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
         this.httpService.get<SearchMovieResultDto>(

@@ -26,6 +26,11 @@ export class MoviesController {
     return this.tmdbApiService.search(query);
   }
 
+  // @Get('popular')
+  // popular() {
+  //   return this.tmdbApiService.search();
+  // }
+
   @Post()
   create(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.create(createMovieDto);
