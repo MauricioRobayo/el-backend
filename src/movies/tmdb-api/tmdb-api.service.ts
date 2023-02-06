@@ -31,10 +31,10 @@ export class TmdbApiService {
   );
   constructor(private readonly httpService: HttpService) {}
 
-  search({ query, language }: SearchMovieDto): Promise<SearchResult> {
+  search(query: SearchMovieDto): Promise<SearchResult> {
     const searchParams = new URLSearchParams({
-      query,
-      language,
+      query: query.query,
+      language: query.language,
     });
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
