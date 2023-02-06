@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +22,10 @@ export class MoviesService {
       backoff: new ExponentialBackoff(),
     },
   );
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
   search({
     query,
@@ -36,9 +40,7 @@ export class MoviesService {
     });
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get(
-          `https://api.themoviedb.org/3/search/movie?${searchParams}`,
-        ),
+        this.httpService.get(`search/movie?${searchParams}`),
       );
       return data;
     });
