@@ -17,6 +17,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
   axios: ^1.3.2
+  cockatiel: ^3.0.0
   eslint: ^8.0.1
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^4.0.0
@@ -40,6 +41,7 @@ dependencies:
   '@nestjs/mapped-types': 1.2.2_hqlovi6rbpzd4qtja6xr2xjxri
   '@nestjs/platform-express': 9.3.3_ylji4ot7z6vetycwdmfdxjovxi
   axios: 1.3.2
+  cockatiel: 3.0.0
   reflect-metadata: 0.1.13
   rxjs: 7.8.0
 
@@ -2118,6 +2120,11 @@ packages:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
     dev: true
+
+  /cockatiel/3.0.0:
+    resolution: {integrity: sha512-1uDbVAqFAtDyfhQXz6fJKCG8kjk5q0o0R0Wz/jtxUEvXVuTpaCEfNnqcXim7C5BI6i43VFdnIIPZNzFpzO5C1Q==}
+    engines: {node: '>=16'}
+    dev: false
 
   /collect-v8-coverage/1.0.1:
     resolution: {integrity: sha512-iBPtljfCNcTKNAto0KEtDfZ3qzjJvqE3aTGZsbhjSBlorqpXJlaWWtPO35D+ZImoC3KWejX64o+yPGxhWSTzfg==}

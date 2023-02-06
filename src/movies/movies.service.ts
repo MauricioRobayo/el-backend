@@ -1,14 +1,31 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { isAxiosError } from 'axios';
+import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 
+const retryStatuses: (number | undefined)[] = [
+  HttpStatus.INTERNAL_SERVER_ERROR,
+  HttpStatus.BAD_GATEWAY,
+  HttpStatus.GATEWAY_TIMEOUT,
+];
+
 @Injectable()
 export class MoviesService {
+  retry = retry(
+    handleWhen(
+      (err) => isAxiosError(err) && retryStatuses.includes(err.status),
+    ),
+    {
+      maxAttempts: 3,
+      backoff: new ExponentialBackoff(),
+    },
+  );
   constructor(private readonly httpService: HttpService) {}
 
-  async search({
+  search({
     query,
     language,
   }: {
@@ -19,12 +36,14 @@ export class MoviesService {
       query,
       language,
     });
-    const { data } = await firstValueFrom(
-      this.httpService.get(
-        `https://api.themoviedb.org/3/search/movie?${searchParams}`,
-      ),
-    );
-    return data;
+    return this.retry.execute(async () => {
+      const { data } = await firstValueFrom(
+        this.httpService.get(
+          `https://api.themoviedb.org/3/search/movie?${searchParams}`,
+        ),
+      );
+      return data;
+    });
   }
 
   create(createMovieDto: CreateMovieDto) {
