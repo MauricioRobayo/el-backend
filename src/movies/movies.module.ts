@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MoviesService } from './movies.service';
 import { MoviesController } from './movies.controller';
+import { MoviesService } from './movies.service';
+import { TmdbApiModule } from './movie-api/tmdb-api/tmdb-api.module';
 
 @Module({
+  imports: [TmdbApiModule],
   controllers: [MoviesController],
-  providers: [MoviesService]
+  providers: [MoviesService],
 })
 export class MoviesModule {}

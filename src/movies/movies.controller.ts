@@ -1,11 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MoviesService } from './movies.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { SearchMovieDto } from './dto/search-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { MoviesService } from './movies.service';
+import { TmdbApiService } from './movie-api/tmdb-api/tmdb-api.service';
 
 @Controller('movies')
 export class MoviesController {
-  constructor(private readonly moviesService: MoviesService) {}
+  constructor(
+    private readonly moviesService: MoviesService,
+    private readonly tmdbApiService: TmdbApiService,
+  ) {}
+
+  @Get('search')
+  search(@Query() query: SearchMovieDto) {
+    return this.tmdbApiService.search(query);
+  }
 
   @Post()
   create(@Body() createMovieDto: CreateMovieDto) {
