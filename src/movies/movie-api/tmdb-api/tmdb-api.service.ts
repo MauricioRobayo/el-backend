@@ -3,18 +3,12 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
-import { Movie } from '../entities/movie.entity';
-import { SearchMovieDto } from '../dto/search-movie.dto';
-
-interface SearchResult {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_results: number;
-}
+import { SearchMovieDto } from '../../dto/search-movie.dto';
+import { SearchMovieResultDto } from '../../dto/search-movie-result.dto';
+import { MovieApi } from '../interfaces/movie-api.interface';
 
 @Injectable()
-export class TmdbApiService {
+export class TmdbApiService implements MovieApi {
   private readonly retryStatuses: (number | undefined)[] = [
     HttpStatus.INTERNAL_SERVER_ERROR,
     HttpStatus.BAD_GATEWAY,
@@ -31,14 +25,16 @@ export class TmdbApiService {
   );
   constructor(private readonly httpService: HttpService) {}
 
-  search(query: SearchMovieDto): Promise<SearchResult> {
+  search(query: SearchMovieDto): Promise<SearchMovieResultDto> {
     const searchParams = new URLSearchParams({
       query: query.query,
       language: query.language,
     });
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get<SearchResult>(`search/movie?${searchParams}`),
+        this.httpService.get<SearchMovieResultDto>(
+          `search/movie?${searchParams}`,
+        ),
       );
       return data;
     });

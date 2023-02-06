@@ -12,7 +12,7 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { SearchMovieDto } from './dto/search-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MoviesService } from './movies.service';
-import { TmdbApiService } from './tmdb-api/tmdb-api.service';
+import { TmdbApiService } from './movie-api/tmdb-api/tmdb-api.service';
 
 @Controller('movies')
 export class MoviesController {
