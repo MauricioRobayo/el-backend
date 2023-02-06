@@ -18,7 +18,7 @@ export class MoviesController {
 
   @Get('search')
   search(@Query('query') query: string) {
-    return query;
+    return this.moviesService.search(query);
   }
 
   @Post()

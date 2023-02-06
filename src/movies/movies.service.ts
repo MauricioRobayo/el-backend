@@ -1,9 +1,16 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {
+  constructor(private readonly httpService: HttpService) {}
+
+  search(query: string) {
+    return 'yeah';
+  }
+
   create(createMovieDto: CreateMovieDto) {
     return 'This action adds a new movie';
   }
