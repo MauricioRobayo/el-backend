@@ -17,8 +17,8 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Get('search')
-  search(@Query('query') query: string) {
-    return this.moviesService.search(query);
+  search(@Query('query') query: string, @Query('language') language: string) {
+    return this.moviesService.search({ query, language });
   }
 
   @Post()

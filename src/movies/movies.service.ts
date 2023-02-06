@@ -8,10 +8,20 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 export class MoviesService {
   constructor(private readonly httpService: HttpService) {}
 
-  async search(query: string): Promise<any> {
+  async search({
+    query,
+    language,
+  }: {
+    query: string;
+    language: string;
+  }): Promise<any> {
+    const searchParams = new URLSearchParams({
+      query,
+      language,
+    });
     const { data } = await firstValueFrom(
       this.httpService.get(
-        `https://api.themoviedb.org/3/search/movie?query=${query}`,
+        `https://api.themoviedb.org/3/search/movie?${searchParams}`,
       ),
     );
     return data;
