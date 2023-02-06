@@ -5,18 +5,16 @@ import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-
-const retryStatuses: (number | undefined)[] = [
-  HttpStatus.INTERNAL_SERVER_ERROR,
-  HttpStatus.BAD_GATEWAY,
-  HttpStatus.GATEWAY_TIMEOUT,
-];
-
 @Injectable()
 export class MoviesService {
-  retry = retry(
+  private readonly retryStatuses: (number | undefined)[] = [
+    HttpStatus.INTERNAL_SERVER_ERROR,
+    HttpStatus.BAD_GATEWAY,
+    HttpStatus.GATEWAY_TIMEOUT,
+  ];
+  private readonly retry = retry(
     handleWhen(
-      (err) => isAxiosError(err) && retryStatuses.includes(err.status),
+      (err) => isAxiosError(err) && this.retryStatuses.includes(err.status),
     ),
     {
       maxAttempts: 3,
