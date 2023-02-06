@@ -13,6 +13,7 @@ import { SearchMovieDto } from './dto/search-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MoviesService } from './movies.service';
 import { TmdbApiService } from './movie-api/tmdb-api/tmdb-api.service';
+import { PopularMovieDto } from './dto/popular-movie.dto';
 
 @Controller('movies')
 export class MoviesController {
@@ -26,10 +27,10 @@ export class MoviesController {
     return this.tmdbApiService.search(query);
   }
 
-  // @Get('popular')
-  // popular() {
-  //   return this.tmdbApiService.search();
-  // }
+  @Get('popular')
+  popular(@Query() query: PopularMovieDto) {
+    return this.tmdbApiService.popular(query);
+  }
 
   @Post()
   create(@Body() createMovieDto: CreateMovieDto) {

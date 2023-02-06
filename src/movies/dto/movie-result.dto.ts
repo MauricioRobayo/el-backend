@@ -1,6 +1,6 @@
 import { Movie } from '../entities/movie.entity';
 
-export class SearchMovieResultDto {
+export class MovieResultDto {
   page: number;
   results: Movie[];
   total_pages: number;
