@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { SearchMovieDto } from './dto/search-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MoviesService } from './movies.service';
 import { TmdbApiService } from './tmdb-api/tmdb-api.service';
@@ -21,7 +22,7 @@ export class MoviesController {
   ) {}
 
   @Get('search')
-  search(@Query() query: { query: string; language: string }) {
+  search(@Query() query: SearchMovieDto) {
     return this.tmdbApiService.search(query);
   }
 

@@ -4,6 +4,7 @@ import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { Movie } from '../entities/movie.entity';
+import { SearchMovieDto } from '../dto/search-movie.dto';
 
 interface SearchResult {
   page: number;
@@ -30,13 +31,7 @@ export class TmdbApiService {
   );
   constructor(private readonly httpService: HttpService) {}
 
-  search({
-    query,
-    language,
-  }: {
-    query: string;
-    language: string;
-  }): Promise<any> {
+  search({ query, language }: SearchMovieDto): Promise<SearchResult> {
     const searchParams = new URLSearchParams({
       query,
       language,
