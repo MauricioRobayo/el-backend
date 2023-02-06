@@ -3,6 +3,14 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
+import { Movie } from '../entities/movie.entity';
+
+interface SearchResult {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
+}
 
 @Injectable()
 export class TmdbApiService {
@@ -35,7 +43,7 @@ export class TmdbApiService {
     });
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get(`search/movie?${searchParams}`),
+        this.httpService.get<SearchResult>(`search/movie?${searchParams}`),
       );
       return data;
     });
