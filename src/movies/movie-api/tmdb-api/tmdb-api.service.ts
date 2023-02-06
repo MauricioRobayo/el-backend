@@ -4,8 +4,9 @@ import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { SearchMovieDto } from '../../dto/search-movie.dto';
-import { SearchMovieResultDto } from '../../dto/search-movie-result.dto';
+import { MovieResultDto } from '../../dto/movie-result.dto';
 import { MovieApi } from '../interfaces/movie-api.interface';
+import { PopularMovieDto } from '../../dto/popular-movie.dto';
 
 @Injectable()
 export class TmdbApiService implements MovieApi {
@@ -25,16 +26,33 @@ export class TmdbApiService implements MovieApi {
   );
   constructor(private readonly httpService: HttpService) {}
 
-  search(query: SearchMovieDto): Promise<SearchMovieResultDto> {
-    const searchParams = new URLSearchParams({
-      query: query.query,
-      language: query.language,
-    });
+  search({ query, language, page }: SearchMovieDto): Promise<MovieResultDto> {
+    const searchParams = new URLSearchParams({ query });
+    if (language) {
+      searchParams.append('language', language);
+    }
+    if (page) {
+      searchParams.append('page', String(page));
+    }
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get<SearchMovieResultDto>(
-          `search/movie?${searchParams}`,
-        ),
+        this.httpService.get<MovieResultDto>(`search/movie?${searchParams}`),
+      );
+      return data;
+    });
+  }
+
+  popular({ language, page }: PopularMovieDto): Promise<MovieResultDto> {
+    const searchParams = new URLSearchParams();
+    if (language) {
+      searchParams.append('language', language);
+    }
+    if (page) {
+      searchParams.append('page', String(page));
+    }
+    return this.retry.execute(async () => {
+      const { data } = await firstValueFrom(
+        this.httpService.get<MovieResultDto>(`movie/popular?${searchParams}`),
       );
       return data;
     });
