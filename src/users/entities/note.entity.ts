@@ -6,7 +6,7 @@ import { User } from './user.entity';
 @Schema({ timestamps: true })
 export class Note extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  owner: User;
+  user: User;
 
   @Prop({ required: true })
   readonly title: string;
