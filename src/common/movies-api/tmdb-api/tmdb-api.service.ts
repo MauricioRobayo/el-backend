@@ -3,11 +3,11 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
-import { SearchMovieDto } from '../../dto/search-movie.dto';
-import { MovieResultDto } from '../../dto/movie-result.dto';
+import { SearchMovieDto } from '../../../movies/dto/search-movie.dto';
+import { MovieResultDto } from '../../../movies/dto/movie-result.dto';
 import { MoviesApi } from '../movies-api.interface';
-import { PopularMovieDto } from '../../dto/popular-movie.dto';
-import { TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
+import { PopularMovieDto } from '../../../movies/dto/popular-movie.dto';
+import { TmdbMovie, TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
 
 @Injectable()
 export class TmdbApiService implements MoviesApi {
@@ -65,6 +65,15 @@ export class TmdbApiService implements MoviesApi {
         ...data,
         results: data.results.map(this.tmdbMovieMapper.mapToMovieEntity),
       };
+    });
+  }
+
+  getMovie(id: number) {
+    return this.retry.execute(async () => {
+      const { data } = await firstValueFrom(
+        this.httpService.get<TmdbMovie>(`movie/${id}`),
+      );
+      return this.tmdbMovieMapper.mapToMovieEntity(data);
     });
   }
 }

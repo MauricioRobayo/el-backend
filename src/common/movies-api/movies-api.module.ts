@@ -5,15 +5,15 @@ type MoviesApiName = 'tmdb'; // 'tmdb' | 'otherMoviesApi' | 'anotherOne'
 
 @Module({})
 export class MoviesApiModule {
-  static forRoot(moviesApiName?: MoviesApiName): DynamicModule {
+  static register(moviesApiName?: MoviesApiName): DynamicModule {
     switch (moviesApiName) {
       // case 'otherMoviesApi':
-      //   return { module: OtherMoviesApi, /* ... */ }
+      //   return { /* ... */ }
       // case 'anotherOne':
-      //   return { module: AnotherOne, /* ... */}
+      //   return { /* ... */}
       //
       //
-      // default to 'tmdb' if no argument provided
+      // default to 'tmdb'
       case 'tmdb':
       default:
         return {

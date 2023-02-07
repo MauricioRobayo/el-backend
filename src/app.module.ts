@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MoviesApiModule } from './common/movies-api/movies-api.module';
 import { MoviesModule } from './movies/movies.module';
 import { UsersModule } from './users/users.module';
 

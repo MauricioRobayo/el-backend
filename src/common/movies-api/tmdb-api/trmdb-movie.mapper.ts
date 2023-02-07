@@ -1,4 +1,8 @@
-import { Genre, Movie, SpokenLanguage } from '../../entities/movie.entity';
+import {
+  Genre,
+  Movie,
+  SpokenLanguage,
+} from '../../../movies/entities/movie.entity';
 
 export interface TmdbResult {
   page: number;
