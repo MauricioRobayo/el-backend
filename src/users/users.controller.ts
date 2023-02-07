@@ -8,11 +8,12 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('favorites')
+  @Post(':id/favorites')
   createFavorite(
+    @Param('id') id: string,
     @Body() createFavoriteDto: CreateFavoriteDto,
   ): Promise<UserDto> {
-    return this.usersService.createFavorite(createFavoriteDto);
+    return this.usersService.createFavorite(id, createFavoriteDto);
   }
 
   @Get(':id')

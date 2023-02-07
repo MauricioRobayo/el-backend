@@ -35,10 +35,10 @@ export class UsersService {
     return this.userMapper.mapToUserDto(user);
   }
 
-  async createFavorite({
-    userId,
-    movieId,
-  }: CreateFavoriteDto): Promise<UserDto> {
+  async createFavorite(
+    userId: string,
+    { movieId }: CreateFavoriteDto,
+  ): Promise<UserDto> {
     const isValidMovieId = await this.isValidMovieId(movieId);
 
     if (!isValidMovieId) {
