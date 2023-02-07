@@ -1,26 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateFavoriteDto } from './dto/create-favorite';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(
+    @InjectModel(User.name) private readonly usersModel: Model<User>,
+  ) {}
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  createFavorite({ userId, movieId }: CreateFavoriteDto) {
+    const user = this.usersModel.findByIdAndUpdate(
+      userId,
+      { $addToSet: { favorites: movieId } },
+      { new: true, upsert: true },
+    );
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return user;
   }
 }
