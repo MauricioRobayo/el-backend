@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 
@@ -7,10 +8,15 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('favorite')
+  @Post('favorites')
   createFavorite(
     @Body() createFavoriteDto: CreateFavoriteDto,
   ): Promise<UserDto> {
     return this.usersService.createFavorite(createFavoriteDto);
+  }
+
+  @Post()
+  createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    return this.usersService.createUser(createUserDto);
   }
 }
