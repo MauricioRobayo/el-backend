@@ -18,7 +18,7 @@ export class UsersController {
   createFavorite(
     @Param('id') id: string,
     @Body() createFavoriteDto: CreateFavoriteDto,
-  ): Promise<UserDto> {
+  ) {
     return this.usersService.createFavorite(id, createFavoriteDto);
   }
 
