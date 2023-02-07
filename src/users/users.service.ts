@@ -38,7 +38,7 @@ export class UsersService {
 
   async createNote(userId: string, createNoteDto: CreateNoteDto) {
     const newNote = new this.notesModel({
-      userId,
+      user: userId,
       ...createNoteDto,
     });
     return newNote.save();
@@ -51,7 +51,7 @@ export class UsersService {
       throw new NotFoundException(`Movie ${movieId} not found`);
     }
 
-    const newFavorite = new this.favoritesModel({ userId, movie });
+    const newFavorite = new this.favoritesModel({ user: userId, movie });
     return newFavorite.save();
   }
 }
