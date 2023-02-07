@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
@@ -13,6 +13,11 @@ export class UsersController {
     @Body() createFavoriteDto: CreateFavoriteDto,
   ): Promise<UserDto> {
     return this.usersService.createFavorite(createFavoriteDto);
+  }
+
+  @Get(':id')
+  getUser(@Param('id') id: string) {
+    return this.usersService.getUser(id);
   }
 
   @Post()

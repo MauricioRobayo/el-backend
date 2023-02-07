@@ -27,6 +27,14 @@ export class UsersService {
     return this.userMapper.mapToUserDto(createdUser);
   }
 
+  async getUser(id: string) {
+    const user = await this.usersModel.findById(id);
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return this.userMapper.mapToUserDto(user);
+  }
+
   async createFavorite({
     userId,
     movieId,
