@@ -4,7 +4,7 @@ import { MoviesController } from './movies.controller';
 import { MoviesService } from './movies.service';
 
 @Module({
-  imports: [MoviesApiModule.forRoot()],
+  imports: [MoviesApiModule.forRoot('tmdb')],
   controllers: [MoviesController],
   providers: [MoviesService],
 })

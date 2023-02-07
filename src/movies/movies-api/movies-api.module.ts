@@ -12,7 +12,8 @@ export class MoviesApiModule {
       // case 'anotherOne':
       //   return {/* ... */}
       //
-      // 'tmdb' is the same default one (no argument provided)
+      //
+      // default to 'tmdb' if no argument provided
       case 'tmdb':
       default:
         return {
