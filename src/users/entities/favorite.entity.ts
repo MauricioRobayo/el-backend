@@ -7,7 +7,7 @@ import { Movie } from '../../movies/entities/movie.entity';
 @Schema({ timestamps: true })
 export class Favorite extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  owner: User;
+  user: User;
 
   @Prop({ required: true, type: Movie })
   readonly movie: Movie;
