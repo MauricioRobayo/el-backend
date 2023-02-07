@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PopularMovieDto } from './dto/popular-movie.dto';
 import { SearchMovieDto } from './dto/search-movie.dto';
-import { TmdbApiService } from './movie-api/tmdb-api/tmdb-api.service';
+import { TmdbApiService } from './movies-api/tmdb-api/tmdb-api.service';
 
 @Injectable()
 export class MoviesService {
