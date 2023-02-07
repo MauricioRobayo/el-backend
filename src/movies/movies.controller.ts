@@ -1,19 +1,19 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { PopularMovieDto } from './dto/popular-movie.dto';
 import { SearchMovieDto } from './dto/search-movie.dto';
-import { TmdbApiService } from './movie-api/tmdb-api/tmdb-api.service';
+import { MoviesService } from './movies.service';
 
 @Controller('movies')
 export class MoviesController {
-  constructor(private readonly tmdbApiService: TmdbApiService) {}
+  constructor(private readonly moviesService: MoviesService) {}
 
   @Get('search')
   search(@Query() query: SearchMovieDto) {
-    return this.tmdbApiService.search(query);
+    return this.moviesService.search(query);
   }
 
   @Get('popular')
   popular(@Query() query: PopularMovieDto) {
-    return this.tmdbApiService.popular(query);
+    return this.moviesService.popular(query);
   }
 }
