@@ -1,4 +1,6 @@
+import { Type } from 'class-transformer';
 import { IsArray, IsOptional, IsString } from 'class-validator';
+import { Movie } from '../../movies/entities/movie.entity';
 
 export class UserDto {
   @IsString()
@@ -6,5 +8,6 @@ export class UserDto {
 
   @IsOptional()
   @IsArray({ each: true })
-  favorites?: string[];
+  @Type(() => Movie)
+  favorites?: Movie[];
 }
