@@ -1,15 +1,13 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isAxiosError } from 'axios';
 import { Model } from 'mongoose';
 import { TmdbApiService } from '../common/movies-api/tmdb-api/tmdb-api.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
+import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
+import { Favorite } from './entities/favorite.entity';
+import { Note } from './entities/note.entity';
 import { User } from './entities/user.entity';
 import { UserMapper } from './users.mapper';
 
@@ -17,6 +15,9 @@ import { UserMapper } from './users.mapper';
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly usersModel: Model<User>,
+    @InjectModel(Note.name) private readonly notesModel: Model<Note>,
+    @InjectModel(Favorite.name)
+    private readonly favoritesModel: Model<Favorite>,
     private readonly userMapper: UserMapper,
     private readonly moviesApiService: TmdbApiService,
   ) {}
@@ -35,26 +36,22 @@ export class UsersService {
     return this.userMapper.mapToUserDto(user);
   }
 
-  async createFavorite(
-    userId: string,
-    { movieId }: CreateFavoriteDto,
-  ): Promise<UserDto> {
+  async createNote(userId: string, createNoteDto: CreateNoteDto) {
+    const newNote = new this.notesModel({
+      userId,
+      ...createNoteDto,
+    });
+    return newNote.save();
+  }
+
+  async createFavorite(userId: string, { movieId }: CreateFavoriteDto) {
     const movie = await this.moviesApiService.getMovie(movieId);
 
     if (!movie) {
       throw new NotFoundException(`Movie ${movieId} not found`);
     }
 
-    const user = await this.usersModel.findByIdAndUpdate(
-      userId,
-      { $addToSet: { favorites: movie } },
-      { new: true },
-    );
-
-    if (!user) {
-      throw new NotFoundException(`User ${userId} not found`);
-    }
-
-    return this.userMapper.mapToUserDto(user);
+    const newFavorite = new this.favoritesModel({ userId, movie });
+    return newFavorite.save();
   }
 }
