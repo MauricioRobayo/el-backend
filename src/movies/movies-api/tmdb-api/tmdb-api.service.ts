@@ -5,7 +5,7 @@ import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { SearchMovieDto } from '../../dto/search-movie.dto';
 import { MovieResultDto } from '../../dto/movie-result.dto';
-import { MoviesApi } from '../interfaces/movies-api.interface';
+import { MoviesApi } from '../movies-api.interface';
 import { PopularMovieDto } from '../../dto/popular-movie.dto';
 import { TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
 
