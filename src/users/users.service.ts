@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateFavoriteDto } from './dto/create-favorite';
+import { CreateFavoriteDto } from './dto/create-favorite.dto';
+import { UserDto } from './dto/user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -10,8 +11,11 @@ export class UsersService {
     @InjectModel(User.name) private readonly usersModel: Model<User>,
   ) {}
 
-  createFavorite({ userId, movieId }: CreateFavoriteDto) {
-    const user = this.usersModel.findByIdAndUpdate(
+  async createFavorite({
+    userId,
+    movieId,
+  }: CreateFavoriteDto): Promise<UserDto> {
+    const user = await this.usersModel.findByIdAndUpdate(
       userId,
       { $addToSet: { favorites: movieId } },
       { new: true, upsert: true },
