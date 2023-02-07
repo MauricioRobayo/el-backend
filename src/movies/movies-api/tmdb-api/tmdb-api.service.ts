@@ -5,12 +5,12 @@ import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
 import { SearchMovieDto } from '../../dto/search-movie.dto';
 import { MovieResultDto } from '../../dto/movie-result.dto';
-import { MovieApi } from '../interfaces/movie-api.interface';
+import { MoviesApi } from '../movies-api.interface';
 import { PopularMovieDto } from '../../dto/popular-movie.dto';
 import { TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
 
 @Injectable()
-export class TmdbApiService implements MovieApi {
+export class TmdbApiService implements MoviesApi {
   private readonly retryStatuses: (number | undefined)[] = [
     HttpStatus.INTERNAL_SERVER_ERROR,
     HttpStatus.BAD_GATEWAY,
