@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TmdbApiService } from './tmdb-api.service';
+import { TmdbMovieMapper } from './trmdb-movie.mapper';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { TmdbApiService } from './tmdb-api.service';
       }),
     }),
   ],
-  providers: [TmdbApiService],
+  providers: [TmdbApiService, TmdbMovieMapper],
   exports: [TmdbApiService],
 })
 export class TmdbApiModule {}

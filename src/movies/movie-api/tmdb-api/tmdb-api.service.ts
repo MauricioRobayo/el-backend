@@ -7,6 +7,7 @@ import { SearchMovieDto } from '../../dto/search-movie.dto';
 import { MovieResultDto } from '../../dto/movie-result.dto';
 import { MovieApi } from '../interfaces/movie-api.interface';
 import { PopularMovieDto } from '../../dto/popular-movie.dto';
+import { TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
 
 @Injectable()
 export class TmdbApiService implements MovieApi {
@@ -24,7 +25,10 @@ export class TmdbApiService implements MovieApi {
       backoff: new ExponentialBackoff(),
     },
   );
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly tmdbMovieMapper: TmdbMovieMapper,
+  ) {}
 
   search({ query, language, page }: SearchMovieDto): Promise<MovieResultDto> {
     const searchParams = new URLSearchParams({ query });
@@ -36,9 +40,12 @@ export class TmdbApiService implements MovieApi {
     }
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get<MovieResultDto>(`search/movie?${searchParams}`),
+        this.httpService.get<TmdbResult>(`search/movie?${searchParams}`),
       );
-      return data;
+      return {
+        ...data,
+        results: data.results.map(this.tmdbMovieMapper.mapToMovieEntity),
+      };
     });
   }
 
@@ -52,9 +59,12 @@ export class TmdbApiService implements MovieApi {
     }
     return this.retry.execute(async () => {
       const { data } = await firstValueFrom(
-        this.httpService.get<MovieResultDto>(`movie/popular?${searchParams}`),
+        this.httpService.get<TmdbResult>(`movie/popular?${searchParams}`),
       );
-      return data;
+      return {
+        ...data,
+        results: data.results.map(this.tmdbMovieMapper.mapToMovieEntity),
+      };
     });
   }
 }
