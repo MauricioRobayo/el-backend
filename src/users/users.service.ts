@@ -1,15 +1,12 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isAxiosError } from 'axios';
 import { Model } from 'mongoose';
 import { TmdbApiService } from '../common/movies-api/tmdb-api/tmdb-api.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
+import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
+import { Note } from './entities/note.entity';
 import { User } from './entities/user.entity';
 import { UserMapper } from './users.mapper';
 
@@ -17,6 +14,7 @@ import { UserMapper } from './users.mapper';
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly usersModel: Model<User>,
+    @InjectModel(Note.name) private readonly notesModel: Model<Note>,
     private readonly userMapper: UserMapper,
     private readonly moviesApiService: TmdbApiService,
   ) {}
@@ -33,6 +31,14 @@ export class UsersService {
       throw new NotFoundException(`User ${id} not found`);
     }
     return this.userMapper.mapToUserDto(user);
+  }
+
+  async createNote(userId: string, createNoteDto: CreateNoteDto) {
+    const newNote = new this.notesModel({
+      userId,
+      ...createNoteDto,
+    });
+    return newNote.save();
   }
 
   async createFavorite(

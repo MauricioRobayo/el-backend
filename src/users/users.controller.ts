@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
+import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
@@ -7,6 +8,11 @@ import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post(':id/notes')
+  createNote(@Param('id') id: string, @Body() createNoteDto: CreateNoteDto) {
+    return this.usersService.createNote(id, createNoteDto);
+  }
 
   @Post(':id/favorites')
   createFavorite(

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
 import { UserMapper } from './users.mapper';
 import { MoviesApiModule } from '../common/movies-api/movies-api.module';
+import { Note, NoteSchema } from './entities/note.entity';
 
 @Module({
   imports: [
@@ -13,6 +14,10 @@ import { MoviesApiModule } from '../common/movies-api/movies-api.module';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Note.name,
+        schema: NoteSchema,
       },
     ]),
   ],
