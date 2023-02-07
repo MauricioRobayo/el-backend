@@ -39,15 +39,15 @@ export class UsersService {
     userId: string,
     { movieId }: CreateFavoriteDto,
   ): Promise<UserDto> {
-    const isValidMovieId = await this.isValidMovieId(movieId);
+    const movie = await this.moviesApiService.getMovie(movieId);
 
-    if (!isValidMovieId) {
+    if (!movie) {
       throw new NotFoundException(`Movie ${movieId} not found`);
     }
 
     const user = await this.usersModel.findByIdAndUpdate(
       userId,
-      { $addToSet: { favorites: movieId } },
+      { $addToSet: { favorites: movie } },
       { new: true },
     );
 
@@ -56,17 +56,5 @@ export class UsersService {
     }
 
     return this.userMapper.mapToUserDto(user);
-  }
-
-  private async isValidMovieId(movieId: number): Promise<boolean> {
-    try {
-      await this.moviesApiService.getMovie(movieId);
-      return true;
-    } catch (err) {
-      if (isAxiosError(err) && err.response?.status === 404) {
-        return false;
-      }
-      throw new InternalServerErrorException();
-    }
   }
 }

@@ -1,16 +1,18 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { isAxiosError } from 'axios';
 import { ExponentialBackoff, handleWhen, retry } from 'cockatiel';
 import { firstValueFrom } from 'rxjs';
-import { SearchMovieDto } from '../../../movies/dto/search-movie.dto';
 import { MovieResultDto } from '../../../movies/dto/movie-result.dto';
-import { MoviesApi } from '../movies-api.interface';
+import { MovieDto } from '../../../movies/dto/movie.dto';
 import { PopularMovieDto } from '../../../movies/dto/popular-movie.dto';
+import { SearchMovieDto } from '../../../movies/dto/search-movie.dto';
+import { MoviesApi } from '../movies-api.interface';
 import { TmdbMovie, TmdbMovieMapper, TmdbResult } from './trmdb-movie.mapper';
 
 @Injectable()
 export class TmdbApiService implements MoviesApi {
+  private readonly logger = new Logger(TmdbApiService.name);
   private readonly retryStatuses: (number | undefined)[] = [
     HttpStatus.INTERNAL_SERVER_ERROR,
     HttpStatus.BAD_GATEWAY,
@@ -18,7 +20,8 @@ export class TmdbApiService implements MoviesApi {
   ];
   private readonly retry = retry(
     handleWhen(
-      (err) => isAxiosError(err) && this.retryStatuses.includes(err.status),
+      (err) =>
+        isAxiosError(err) && this.retryStatuses.includes(err.response?.status),
     ),
     {
       maxAttempts: 3,
@@ -28,7 +31,11 @@ export class TmdbApiService implements MoviesApi {
   constructor(
     private readonly httpService: HttpService,
     private readonly tmdbMovieMapper: TmdbMovieMapper,
-  ) {}
+  ) {
+    this.retry.onRetry((data) => {
+      this.logger.warn(`Retrying ${data}`);
+    });
+  }
 
   search({ query, language, page }: SearchMovieDto): Promise<MovieResultDto> {
     const searchParams = new URLSearchParams({ query });
@@ -68,12 +75,22 @@ export class TmdbApiService implements MoviesApi {
     });
   }
 
-  getMovie(id: number) {
+  getMovie(id: number): Promise<MovieDto | null> {
     return this.retry.execute(async () => {
-      const { data } = await firstValueFrom(
-        this.httpService.get<TmdbMovie>(`movie/${id}`),
-      );
-      return this.tmdbMovieMapper.mapToMovieEntity(data);
+      try {
+        const { data } = await firstValueFrom(
+          this.httpService.get<TmdbMovie>(`movie/${id}`),
+        );
+        return this.tmdbMovieMapper.mapToMovieEntity(data);
+      } catch (err) {
+        if (
+          isAxiosError(err) &&
+          err.response?.status === HttpStatus.NOT_FOUND
+        ) {
+          return null;
+        }
+        throw err;
+      }
     });
   }
 }
