@@ -27,10 +27,18 @@ export class UsersService {
     return this.userMapper.mapToUserDto(createdUser);
   }
 
-  async createFavorite({
-    userId,
-    movieId,
-  }: CreateFavoriteDto): Promise<UserDto> {
+  async getUser(id: string) {
+    const user = await this.usersModel.findById(id);
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    return this.userMapper.mapToUserDto(user);
+  }
+
+  async createFavorite(
+    userId: string,
+    { movieId }: CreateFavoriteDto,
+  ): Promise<UserDto> {
     const isValidMovieId = await this.isValidMovieId(movieId);
 
     if (!isValidMovieId) {
