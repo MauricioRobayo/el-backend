@@ -13,6 +13,9 @@ export class Note extends Document {
   user: User;
 
   @Prop({ required: true })
+  readonly movieId: string;
+
+  @Prop({ required: true })
   readonly title: string;
 
   @Prop()

@@ -1,6 +1,9 @@
-import { IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateNoteDto {
+  @IsNumber()
+  readonly movieId: number;
+
   @IsString()
   readonly title: string;
 
