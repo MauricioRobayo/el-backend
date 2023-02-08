@@ -32,26 +32,46 @@ export class UsersService {
     return user;
   }
 
-  createNote(userId: string, createNoteDto: CreateNoteDto) {
+  async createNote(userId: string, createNoteDto: CreateNoteDto) {
+    const user = await this.usersModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
+    }
+
     return this.notesModel.create({
       ...createNoteDto,
       user: userId,
     });
   }
 
-  async updateNote(noteId: string, updateNoteDto: UpdateNoteDto) {
+  async updateNote(
+    userId: string,
+    noteId: string,
+    updateNoteDto: UpdateNoteDto,
+  ) {
     const updatedNote = await this.notesModel
-      .findByIdAndUpdate(noteId, { $set: updateNoteDto })
+      .findOneAndUpdate(
+        { _id: noteId, user: userId },
+        { $set: updateNoteDto },
+        { new: true },
+      )
       .exec();
 
     if (!updatedNote) {
-      throw new NotFoundException(`Note ${noteId} not found`);
+      throw new NotFoundException(
+        `Note ${noteId} for user ${userId} not found`,
+      );
     }
 
     return updatedNote;
   }
 
   async createFavorite(userId: string, { movieId }: CreateFavoriteDto) {
+    const user = await this.usersModel.findById(userId).exec();
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
+    }
+
     const movie = await this.moviesApiService.getMovie(movieId);
 
     if (!movie) {
