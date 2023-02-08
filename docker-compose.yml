@@ -1,15 +1,25 @@
 version: '3.7'
+
 services:
-  mongodb_container:
+  mongodb:
     image: mongo:latest
+    restart: on-failure
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-      MONGO_DATABASE: movies
+      MONGODB_DATABASE: el-backend
+    networks:
+      - services
     ports:
       - 27017:27017
     volumes:
-      - mongodb_data_container:/data/db
+      - mongodb-data:/data/db
+      - mongodb-log:/var/log/mongodb
 
 volumes:
-  mongodb_data_container:
+  mongodb-data:
+    driver: local
+  mongodb-log:
+    driver: local
+
+networks:
+  services:
+    name: mongodb.network
