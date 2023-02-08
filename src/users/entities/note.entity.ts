@@ -5,7 +5,7 @@ import { User } from './user.entity';
 
 @Schema({ timestamps: true })
 export class Note extends Document {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   user: User;
 
   @Prop({ required: true })
