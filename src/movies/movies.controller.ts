@@ -1,9 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { MovieResultDto } from './dto/movie-result.dto';
 import { PopularMovieDto } from './dto/popular-movie.dto';
 import { SearchMovieDto } from './dto/search-movie.dto';
 import { MoviesService } from './movies.service';
 
+@ApiTags('Movies')
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
