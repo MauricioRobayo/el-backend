@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { UsersService } from './users.service';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
