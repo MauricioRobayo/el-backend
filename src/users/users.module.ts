@@ -3,7 +3,6 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './entities/user.entity';
-import { UserMapper } from './users.mapper';
 import { MoviesApiModule } from '../common/movies-api/movies-api.module';
 import { Note, NoteSchema } from './entities/note.entity';
 import { Favorite, FavoriteSchema } from './entities/favorite.entity';
@@ -27,6 +26,6 @@ import { Favorite, FavoriteSchema } from './entities/favorite.entity';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, UserMapper],
+  providers: [UsersService],
 })
 export class UsersModule {}

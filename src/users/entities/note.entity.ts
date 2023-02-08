@@ -13,6 +13,9 @@ export class Note extends Document {
 
   @Prop()
   readonly description: string;
+
+  @Prop()
+  readonly imageUrl: string;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);
