@@ -19,10 +19,11 @@ export class UsersController {
 
   @Patch(':userId/notes/:noteId')
   updateNote(
+    @Param('userId') userId: string,
     @Param('noteId') noteId: string,
     @Body() updateNoteDto: UpdateNoteDto,
   ) {
-    return this.usersService.updateNote(noteId, updateNoteDto);
+    return this.usersService.updateNote(userId, noteId, updateNoteDto);
   }
 
   @Post(':id/favorites')
