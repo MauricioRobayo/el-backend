@@ -6,6 +6,7 @@ import { User, UserSchema } from './entities/user.entity';
 import { MoviesApiModule } from '../common/movies-api/movies-api.module';
 import { Note, NoteSchema } from './entities/note.entity';
 import { Favorite, FavoriteSchema } from './entities/favorite.entity';
+import { UserMapper } from './user.mapper';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { Favorite, FavoriteSchema } from './entities/favorite.entity';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UserMapper],
 })
 export class UsersModule {}
