@@ -102,6 +102,8 @@ PATCH http://localhost:3000/users/<USER ID>/notes
 
 ## Tests
 
+This is still WIP :\
+
 ```sh
 pnpm run test
 ```
