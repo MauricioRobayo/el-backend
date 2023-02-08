@@ -99,3 +99,11 @@ PATCH http://localhost:3000/users/<USER ID>/notes
   "description": "esto cambió"
 }
 ```
+
+## Tests
+
+This is still WIP :\
+
+```sh
+pnpm run test
+```

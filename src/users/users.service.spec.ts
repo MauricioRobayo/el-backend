@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { TmdbApiModule } from '../common/movies-api/tmdb-api/tmdb-api.module';
+import { UserMapper } from './user.mapper';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -6,7 +8,23 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      imports: [TmdbApiModule],
+      providers: [
+        UsersService,
+        UserMapper,
+        {
+          provide: 'UserModel',
+          useValue: {},
+        },
+        {
+          provide: 'NoteModel',
+          useValue: {},
+        },
+        {
+          provide: 'FavoriteModel',
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
