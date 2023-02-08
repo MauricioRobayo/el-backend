@@ -3,7 +3,6 @@ import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -40,7 +39,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+  createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
 }

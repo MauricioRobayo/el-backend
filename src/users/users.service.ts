@@ -6,11 +6,9 @@ import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { UserDto } from './dto/user.dto';
 import { Favorite } from './entities/favorite.entity';
 import { Note } from './entities/note.entity';
 import { User } from './entities/user.entity';
-import { UserMapper } from './users.mapper';
 
 @Injectable()
 export class UsersService {
@@ -19,14 +17,11 @@ export class UsersService {
     @InjectModel(Note.name) private readonly notesModel: Model<Note>,
     @InjectModel(Favorite.name)
     private readonly favoritesModel: Model<Favorite>,
-    private readonly userMapper: UserMapper,
     private readonly moviesApiService: TmdbApiService,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const newUser = new this.usersModel(createUserDto);
-    const createdUser = await newUser.save();
-    return this.userMapper.mapToUserDto(createdUser);
+  createUser(createUserDto: CreateUserDto) {
+    return this.usersModel.create(createUserDto);
   }
 
   async getUser(id: string) {
@@ -34,15 +29,15 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User ${id} not found`);
     }
-    return this.userMapper.mapToUserDto(user);
+    return user;
   }
 
-  async createNote(userId: string, createNoteDto: CreateNoteDto) {
-    const newNote = new this.notesModel({
-      user: userId,
+  createNote(userId: string, createNoteDto: CreateNoteDto) {
+    console.log(createNoteDto);
+    return this.notesModel.create({
       ...createNoteDto,
+      user: userId,
     });
-    return newNote.save();
   }
 
   async updateNote(noteId: string, updateNoteDto: UpdateNoteDto) {
@@ -66,7 +61,6 @@ export class UsersService {
       throw new NotFoundException(`Movie ${movieId} not found`);
     }
 
-    const newFavorite = new this.favoritesModel({ user: userId, movie });
-    return newFavorite.save();
+    return this.favoritesModel.create({ user: userId, movie });
   }
 }
