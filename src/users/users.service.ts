@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TmdbApiService } from '../common/movies-api/tmdb-api/tmdb-api.service';
@@ -9,6 +13,7 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 import { Favorite } from './entities/favorite.entity';
 import { Note } from './entities/note.entity';
 import { User } from './entities/user.entity';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -33,6 +38,10 @@ export class UsersService {
   }
 
   async createNote(userId: string, createNoteDto: CreateNoteDto) {
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new BadRequestException(`Invalid user id '${userId}'`);
+    }
+
     const user = await this.usersModel.findById(userId).exec();
     if (!user) {
       throw new NotFoundException(`User ${userId} not found`);
@@ -49,6 +58,14 @@ export class UsersService {
     noteId: string,
     updateNoteDto: UpdateNoteDto,
   ) {
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new BadRequestException(`Invalid user id '${userId}'`);
+    }
+
+    if (!mongoose.isValidObjectId(noteId)) {
+      throw new BadRequestException(`Invalid note id '${noteId}'`);
+    }
+
     const updatedNote = await this.notesModel
       .findOneAndUpdate(
         { _id: noteId, user: userId },
@@ -67,6 +84,10 @@ export class UsersService {
   }
 
   async createFavorite(userId: string, { movieId }: CreateFavoriteDto) {
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new BadRequestException(`Invalid user id '${userId}'`);
+    }
+
     const user = await this.usersModel.findById(userId).exec();
     if (!user) {
       throw new NotFoundException(`User ${userId} not found`);
