@@ -25,7 +25,7 @@ export class UsersService {
   }
 
   async getUser(id: string) {
-    const user = await this.usersModel.findById(id);
+    const user = await this.usersModel.findById(id).exec();
     if (!user) {
       throw new NotFoundException(`User ${id} not found`);
     }
@@ -33,7 +33,6 @@ export class UsersService {
   }
 
   createNote(userId: string, createNoteDto: CreateNoteDto) {
-    console.log(createNoteDto);
     return this.notesModel.create({
       ...createNoteDto,
       user: userId,
@@ -41,11 +40,9 @@ export class UsersService {
   }
 
   async updateNote(noteId: string, updateNoteDto: UpdateNoteDto) {
-    const updatedNote = await this.notesModel.findByIdAndUpdate(
-      noteId,
-      { $set: updateNoteDto },
-      { new: true },
-    );
+    const updatedNote = await this.notesModel
+      .findByIdAndUpdate(noteId, { $set: updateNoteDto })
+      .exec();
 
     if (!updatedNote) {
       throw new NotFoundException(`Note ${noteId} not found`);
