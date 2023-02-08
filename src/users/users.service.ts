@@ -5,6 +5,7 @@ import { TmdbApiService } from '../common/movies-api/tmdb-api/tmdb-api.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 import { UserDto } from './dto/user.dto';
 import { Favorite } from './entities/favorite.entity';
 import { Note } from './entities/note.entity';
@@ -42,6 +43,20 @@ export class UsersService {
       ...createNoteDto,
     });
     return newNote.save();
+  }
+
+  async updateNote(noteId: string, updateNoteDto: UpdateNoteDto) {
+    const updatedNote = await this.notesModel.findByIdAndUpdate(
+      noteId,
+      { $set: updateNoteDto },
+      { new: true },
+    );
+
+    if (!updatedNote) {
+      throw new NotFoundException(`Note ${noteId} not found`);
+    }
+
+    return updatedNote;
   }
 
   async createFavorite(userId: string, { movieId }: CreateFavoriteDto) {
