@@ -1,73 +1,103 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# EL BACKEND
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Requisitos
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+1. Docker
+2. Node version 18.12.1
 
-## Description
+## Up and running
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Clonar el proyecto:
 
-## Installation
-
-```bash
-$ pnpm install
+```sh
+git clone https://github.com/mauriciorobayo/el-backend
+cd el-backend
 ```
 
-## Running the app
+2. Crear archivo `.env`:
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```sh
+cp .env.example .env
 ```
 
-## Test
+2. TMDB Access Token
 
-```bash
-# unit tests
-$ pnpm run test
+El proyecto usa access token (v3 y v4) y no API_KEY (v3).
 
-# e2e tests
-$ pnpm run test:e2e
+Para obtener el access token ir a https://www.themoviedb.org/settings/api y copiar el JWT que se encuentra en la sección `API Read Access Token (v4 auth)`.
 
-# test coverage
-$ pnpm run test:cov
+En el archivo `.env` pegar el access token para el valor de `TMDB_ACCESS_TOKEN`.
+
+3. Instalar pnpm y dependencias:
+
+```sh
+npm i -g pnpm
+pnpm install
 ```
 
-## Support
+4. Levantar la imagen de MongoDB:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```sh
+docker-compose up mongodb -d
+```
 
-## Stay in touch
+5. Iniciar el proyecto para desarrollo:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```sh
+pnpm run start
+```
 
-## License
+## Documentación de la API
 
-Nest is [MIT licensed](LICENSE).
+Una vez el proyecto esté corriendo, la documentación se puede consultar en http://localhost:3000/docs.
+
+## Uso
+
+La aplicación permite consultar las películas más populares usando el endpoint: http://localhost:3000/movies/popular
+
+También se pueden buscar películas usando el endpoint: http://localhost:3000/movies/search?query=<PALABRA CLAVE DE BÚSQUEDA>
+
+Tome nota del `movieApiId` para la(s) películas de su interés, ya que se necesita para agregar la película a sus favoritos o crear notas.
+
+#### Uso
+
+Lo primero es obtener un id de usuario (solo crea un usuario mock no se necesita body):
+
+```http
+POST http://localhost:3000/users
+```
+
+El endpoint devuelve el id del usuario.
+
+Para agregar una película a los favoritos de este usuario:
+
+```http
+POST http://localhost:3000/users/<USER ID>/favorites
+
+{
+  "movieId": <MOVIE API ID>
+}
+```
+
+Para agregar una nota a las notas del usuario:
+
+```http
+POST http://localhost:3000/users/<USER ID>/notes
+
+{
+  "movieId": <MOVIE API ID>,
+  "title": "title",
+  "description": "description",
+  "imageUrl": "https:image.url.com"
+}
+```
+
+Editar una nota:
+
+```http
+PATCH http://localhost:3000/users/<USER ID>/notes
+
+{
+  "description": "esto cambió"
+}
+```
