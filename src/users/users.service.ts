@@ -58,7 +58,6 @@ export class UsersService {
     noteId: string,
     updateNoteDto: UpdateNoteDto,
   ) {
-    console.log(updateNoteDto);
     if (!mongoose.isValidObjectId(userId)) {
       throw new BadRequestException(`Invalid user id '${userId}'`);
     }
