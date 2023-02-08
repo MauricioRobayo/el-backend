@@ -107,3 +107,7 @@ This is still WIP :\
 ```sh
 pnpm run test
 ```
+
+## Postman
+
+Para hacer pruebas en postman: [Postman Collection](/el-backend.postman_collection.json).
