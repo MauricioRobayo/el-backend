@@ -41,7 +41,7 @@ pnpm install
 docker-compose up mongodb -d
 ```
 
-5. Iniciar el proyecto para desarrollo:
+5. Iniciar el proyecto:
 
 ```sh
 pnpm run start
@@ -59,9 +59,7 @@ También se pueden buscar películas usando el endpoint: http://localhost:3000/m
 
 Tome nota del `movieApiId` para la(s) películas de su interés, ya que se necesita para agregar la película a sus favoritos o crear notas.
 
-#### Uso
-
-Lo primero es obtener un id de usuario (solo crea un usuario mock no se necesita body):
+Ahora necesita un id de usuario (solo crea un usuario mock no se necesita body):
 
 ```http
 POST http://localhost:3000/users
