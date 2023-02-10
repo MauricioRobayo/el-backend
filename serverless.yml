@@ -1,0 +1,21 @@
+service: el-backend
+useDotenv: true
+plugins:
+  - serverless-offline
+provider:
+  name: aws
+  runtime: nodejs18.x
+  environment:
+    TMDB_ACCESS_TOKEN: ${env:TMDB_ACCESS_TOKEN}
+    TMDB_BASE_API_URL: ${env:TMDB_BASE_API_URL}
+    MONGODB_URI: ${env:MONGODB_URI}
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
