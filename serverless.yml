@@ -10,12 +10,16 @@ provider:
     TMDB_BASE_API_URL: ${env:TMDB_BASE_API_URL}
     MONGODB_URI: ${env:MONGODB_URI}
 functions:
-  main:
+  el-backend:
     handler: dist/serverless.handler
+    name: ${sls:stage}-el-backend
+    description: Movie notes and favorites management
+    url: true
     events:
-      - http:
-          method: ANY
-          path: /
-      - http:
-          method: ANY
-          path: '{proxy+}'
+      - httpApi: 'GET /movies/search'
+      - httpApi: 'GET /movies/popular'
+      - httpApi: 'GET /users/{userId}'
+      - httpApi: 'POST /users'
+      - httpApi: 'POST /users/{userId}/favorites'
+      - httpApi: 'POST /users/{userId}/notes'
+      - httpApi: 'PATCH /users/{userId}/notes/{nodeId}'
