@@ -1,7 +1,11 @@
 service: el-backend
 useDotenv: true
 plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
   - serverless-offline
+package:
+  excludeDevDependencies: false
 provider:
   name: aws
   runtime: nodejs18.x
