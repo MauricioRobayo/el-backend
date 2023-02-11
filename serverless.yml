@@ -4,6 +4,10 @@ plugins:
   - serverless-plugin-common-excludes
   - serverless-plugin-include-dependencies
   - serverless-offline
+custom:
+  warmup:
+    - production
+    - staging
 package:
   excludeDevDependencies: false
 provider:
