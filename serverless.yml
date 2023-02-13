@@ -29,8 +29,8 @@ functions:
     events:
       - httpApi: 'GET /movies/search'
       - httpApi: 'GET /movies/popular'
-      - httpApi: 'GET /users/{userId}'
-      - httpApi: 'POST /users'
-      - httpApi: 'POST /users/{userId}/favorites'
-      - httpApi: 'POST /users/{userId}/notes'
-      - httpApi: 'PATCH /users/{userId}/notes/{nodeId}'
+      - httpApi: 'POST /auth/register'
+      - httpApi: 'POST /auth/login'
+      - httpApi: 'POST /users/favorites'
+      - httpApi: 'POST /users/notes'
+      - httpApi: 'PATCH /users/notes/{nodeId}'
