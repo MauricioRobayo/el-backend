@@ -137,7 +137,7 @@ yarn test
 
 ## Deployment
 
-La API puede ser desplegada usando [serverless](/serverless.yml), se necesita tener el comando `sls` instalado (`npm install -g serverless`):
+La API puede ser desplegada usando [serverless](/serverless.yml), se necesita tener el comando `sls` instalado (`npm install -g serverless`) y crear el archivo `.env.prop` a partir de [.env.example](/.env.example):
 
 ```sh
 yarn build
