@@ -5,7 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AwsCognitoService } from './aws-cognito.service';
+import { AwsCognitoService } from './providers/aws-cognito.service';
 import { AuthLoginUserDto } from './dto/auth-login-user.dto';
 import { AuthRegisterUserDto } from './dto/auth-register-user.dto';
 

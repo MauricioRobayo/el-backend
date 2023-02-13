@@ -5,11 +5,13 @@ import {
   CognitoUserAttribute,
   CognitoUserPool,
 } from 'amazon-cognito-identity-js';
-import { AuthLoginUserDto } from './dto/auth-login-user.dto';
-import { AuthRegisterUserDto } from './dto/auth-register-user.dto';
+import { AuthLoginUserDto } from '../dto/auth-login-user.dto';
+import { AuthRegisterUserDto } from '../dto/auth-register-user.dto';
+import { AuthenticatedUserDto } from '../dto/authenticated-user.dto';
+import { AuthService } from './auth-service.interface';
 
 @Injectable()
-export class AwsCognitoService {
+export class AwsCognitoService implements AuthService {
   private userPool: CognitoUserPool;
 
   constructor() {
@@ -19,7 +21,7 @@ export class AwsCognitoService {
     });
   }
 
-  async registerUser(authRegisterUserDto: AuthRegisterUserDto) {
+  async registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<void> {
     const { name, email, password } = authRegisterUserDto;
 
     return new Promise((resolve, reject) => {
@@ -35,7 +37,7 @@ export class AwsCognitoService {
         [],
         (err, result) => {
           if (result) {
-            resolve(result.user);
+            resolve();
           } else {
             reject(err);
           }
@@ -44,7 +46,9 @@ export class AwsCognitoService {
     });
   }
 
-  async authenticateUser(authLoginUserDto: AuthLoginUserDto) {
+  async authenticateUser(
+    authLoginUserDto: AuthLoginUserDto,
+  ): Promise<AuthenticatedUserDto> {
     const { email, password } = authLoginUserDto;
     const userData = {
       Username: email,
