@@ -144,6 +144,16 @@ yarn build
 sls deploy
 ```
 
+Puede probar el deploy de staging actual:
+
+- GET - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/movies/search
+- GET - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/movies/popular
+- POST - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/auth/register
+- POST - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/auth/login
+- POST - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/users/favorites
+- POST - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/users/notes
+- PATCH - https://250nu3bklh.execute-api.us-east-1.amazonaws.com/users/notes/{nodeId}
+
 ## Postman
 
 Para hacer pruebas en postman: [Postman Collection](/docs/Postman/el-backend.postman_collection.json).
