@@ -122,7 +122,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/movies/popular?page=35&language=es",
+							"raw": "http://localhost:3000/movies/popular?page=5&language=es",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -135,7 +135,7 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "35"
+									"value": "5"
 								},
 								{
 									"key": "language",
@@ -214,17 +214,18 @@
 			]
 		},
 		{
-			"name": "users",
+			"name": "auth",
 			"item": [
 				{
-					"name": "create user",
+					"name": "register",
 					"event": [
 						{
-							"listen": "test",
+							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"const { userId } = JSON.parse(responseBody)",
-									"pm.collectionVariables.set('user_id', userId);"
+									"const {email, password} = JSON.parse(pm.request.body.raw);",
+									"pm.collectionVariables.set('email', email);",
+									"pm.collectionVariables.set('password', password);"
 								],
 								"type": "text/javascript"
 							}
@@ -233,149 +234,85 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hulig@tafmail.com\",\n    \"name\": \"abc\",\n    \"password\": \"Abcde123!$\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:3000/users",
+							"raw": "http://localhost:3000/auth/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"users"
+								"auth",
+								"register"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "create user",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/users",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"users"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "37"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"25-xgBHiEC8Z/RPZfPwWpFm1T7NjGE\""
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 08 Feb 2023 18:23:32 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"userId\": \"63e3e8a4a5bf18c9d8e51d78\"\n}"
-						}
-					]
+					"response": []
 				},
 				{
-					"name": "get user",
+					"name": "login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const {accessToken} = JSON.parse(pm.response.body);",
+									"pm.collectionVariables.set('access_token', accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:3000/users/{{user_id}}",
+							"raw": "http://localhost:3000/auth/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"users",
-								"{{user_id}}"
+								"auth",
+								"login"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "get user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/users/{{user_id}}",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"users",
-										"{{user_id}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "37"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"25-xgBHiEC8Z/RPZfPwWpFm1T7NjGE\""
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 08 Feb 2023 18:23:41 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"userId\": \"63e3e8a4a5bf18c9d8e51d78\"\n}"
-						}
-					]
-				},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
 				{
 					"name": "add to favorites",
 					"request": {
@@ -383,7 +320,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"movieId\": 413423401\n}",
+							"raw": "{\n    \"movieId\": 597\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -675,6 +612,36 @@
 						}
 					]
 				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
 			]
 		}
 	],
@@ -685,6 +652,18 @@
 		},
 		{
 			"key": "note_id",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "access_token",
 			"value": ""
 		}
 	]

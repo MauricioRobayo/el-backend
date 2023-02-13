@@ -4,11 +4,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MoviesApiModule } from './common/movies-api/movies-api.module';
 import { MoviesModule } from './movies/movies.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    MoviesModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -16,7 +18,9 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
+    MoviesModule,
     UsersModule,
+    AuthModule,
   ],
   providers: [],
 })

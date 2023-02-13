@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -12,38 +19,31 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post(':userId/notes')
+  @Post('notes')
+  @UseGuards(AuthGuard('jwt'))
   createNote(
-    @Param('userId') userId: string,
+    @Request() req: { user: { idUser: string } },
     @Body() createNoteDto: CreateNoteDto,
   ) {
-    return this.usersService.createNote(userId, createNoteDto);
+    return this.usersService.createNote(req.user.idUser, createNoteDto);
   }
 
-  @Patch(':userId/notes/:noteId')
+  @Patch('notes/:noteId')
+  @UseGuards(AuthGuard('jwt'))
   updateNote(
-    @Param('userId') userId: string,
+    @Request() req: { user: { idUser: string } },
     @Param('noteId') noteId: string,
     @Body() updateNoteDto: UpdateNoteDto,
   ) {
-    return this.usersService.updateNote(userId, noteId, updateNoteDto);
+    return this.usersService.updateNote(req.user.idUser, noteId, updateNoteDto);
   }
 
-  @Post(':id/favorites')
+  @Post('favorites')
+  @UseGuards(AuthGuard('jwt'))
   createFavorite(
-    @Param('id') id: string,
+    @Request() req: { user: { idUser: string } },
     @Body() createFavoriteDto: CreateFavoriteDto,
   ) {
-    return this.usersService.createFavorite(id, createFavoriteDto);
-  }
-
-  @Get(':id')
-  getUser(@Param('id') id: string): Promise<UserDto> {
-    return this.usersService.getUser(id);
-  }
-
-  @Post()
-  createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    return this.usersService.createUser(createUserDto);
+    return this.usersService.createFavorite(req.user.idUser, createFavoriteDto);
   }
 }

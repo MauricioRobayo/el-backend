@@ -28,11 +28,10 @@ Para obtener el access token ir a https://www.themoviedb.org/settings/api y copi
 
 En el archivo `.env` pegar el access token para el valor de `TMDB_ACCESS_TOKEN`.
 
-3. Instalar pnpm y dependencias:
+3. Instalar dependencias:
 
 ```sh
-npm i -g pnpm
-pnpm install
+yarn install
 ```
 
 4. Levantar la imagen de MongoDB:
@@ -44,43 +43,57 @@ docker-compose up mongodb -d
 5. Iniciar el proyecto:
 
 ```sh
-pnpm run start
+yarn start
 ```
 
 ## Documentación de la API
 
-Una vez el proyecto esté corriendo, la documentación se puede consultar en http://localhost:3000/docs.
+Una vez el proyecto esté corriendo, documentación Swagger se puede consultar en http://localhost:3000/docs.
 
-## Uso
+## Movies
 
 La aplicación permite consultar las películas más populares usando el endpoint: http://localhost:3000/movies/popular
 
 También se pueden buscar películas usando el endpoint: http://localhost:3000/movies/search?query=<PALABRA CLAVE DE BÚSQUEDA>
 
-Tome nota del `movieApiId` para la(s) películas de su interés, ya que se necesita para agregar la película a sus favoritos o crear notas.
+Estos endpoints no requieren autenticación.
 
-Ahora necesita un id de usuario (solo crea un usuario mock no se necesita body):
+## Auth
 
-```http
-POST http://localhost:3000/users
-```
-
-El endpoint devuelve el id del usuario.
-
-Para agregar una película a los favoritos de este usuario:
+Para crear un usuario:
 
 ```http
-POST http://localhost:3000/users/<USER ID>/favorites
+POST http://localhost:3000/auth/register
 
 {
-  "movieId": <MOVIE API ID>
+    "email": "nobody@email.com",
+    "name": "NoBody",
+    "password": "Abcde123!$"
 }
 ```
 
-Para agregar una nota a las notas del usuario:
+Una vez crea el usuario debe ir al buzón de correo del usuario para verificar la cuenta dando click en el vínculo que fue enviado.
+
+Para ingresar una vez verificado el correo del usuario creado:
 
 ```http
-POST http://localhost:3000/users/<USER ID>/notes
+POST http://localhost:3000/auth/login
+
+{
+    "email": "nobody@email.com",
+    "password": "Abcde123!$"
+}
+```
+
+El login devuelve el `accessToken` y el `refreshToken`. Para generar una solicitud autenticada debe enviar el `accessToken` recibido como `bearer` token.
+
+## Notes
+
+Para crear una nota:
+
+```http
+POST http://localhost:3000/users/notes
+authorization: bearer <ACCESS_TOKEN>
 
 {
   "movieId": <MOVIE API ID>,
@@ -93,10 +106,24 @@ POST http://localhost:3000/users/<USER ID>/notes
 Editar una nota:
 
 ```http
-PATCH http://localhost:3000/users/<USER ID>/notes
+PATCH http://localhost:3000/users/notes
+authorization: bearer <ACCESS_TOKEN>
 
 {
   "description": "esto cambió"
+}
+```
+
+## Favorites
+
+Para agregar una lista a los favoritos:
+
+```http
+POST http://localhost:3000/users/favorites
+authorization: bearer <ACCESS_TOKEN>
+
+{
+  "movieId": <MOVIE API ID>,
 }
 ```
 
@@ -105,9 +132,9 @@ PATCH http://localhost:3000/users/<USER ID>/notes
 This is still WIP :\
 
 ```sh
-pnpm run test
+yarn test
 ```
 
 ## Postman
 
-Para hacer pruebas en postman: [Postman Collection](/el-backend.postman_collection.json).
+Para hacer pruebas en postman: [Postman Collection](/docs/Postman/el-backend.postman_collection.json).
