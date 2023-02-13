@@ -33,14 +33,6 @@ export class UsersService {
     return this.userMapper.mapUserToDto(newUser);
   }
 
-  async getUser(id: string): Promise<UserDto> {
-    const user = await this.usersModel.findById(id).exec();
-    if (!user) {
-      throw new NotFoundException(`User ${id} not found`);
-    }
-    return this.userMapper.mapUserToDto(user);
-  }
-
   async createNote(userId: string, createNoteDto: CreateNoteDto) {
     if (!isValidObjectId(userId)) {
       throw new BadRequestException(`Invalid user id '${userId}'`);
