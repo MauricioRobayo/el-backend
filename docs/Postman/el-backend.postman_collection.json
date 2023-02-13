@@ -232,11 +232,14 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"hulig@tafmail.com\",\n    \"name\": \"abc\",\n    \"password\": \"Abcde123!$\"\n}",
+							"raw": "{\n    \"email\": \"wylyrap@inboxbear.com\",\n    \"name\": \"abc\",\n    \"password\": \"Abcde123!$\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -274,7 +277,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const {accessToken} = JSON.parse(pm.response.body);",
+									"const {accessToken} = JSON.parse(responseBody);",
 									"pm.collectionVariables.set('access_token', accessToken);"
 								],
 								"type": "text/javascript"
@@ -282,6 +285,9 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -328,7 +334,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/{{user_id}}/favorites",
+							"raw": "http://localhost:3000/users/favorites",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -336,7 +342,6 @@
 							"port": "3000",
 							"path": [
 								"users",
-								"{{user_id}}",
 								"favorites"
 							]
 						}
@@ -435,7 +440,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/{{user_id}}/notes",
+							"raw": "http://localhost:3000/users/notes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -443,7 +448,6 @@
 							"port": "3000",
 							"path": [
 								"users",
-								"{{user_id}}",
 								"notes"
 							]
 						}
@@ -643,6 +647,36 @@
 					}
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
