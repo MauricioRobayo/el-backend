@@ -135,6 +135,15 @@ This is still WIP :\
 yarn test
 ```
 
+## Deployment
+
+La API puede ser desplegada usando [serverless](/serverless.yml), se necesita tener el comando `sls` instalado (`npm install -g serverless`):
+
+```sh
+yarn build
+sls deploy
+```
+
 ## Postman
 
 Para hacer pruebas en postman: [Postman Collection](/docs/Postman/el-backend.postman_collection.json).
