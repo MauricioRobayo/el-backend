@@ -137,4 +137,4 @@ yarn test
 
 ## Postman
 
-Para hacer pruebas en postman: [Postman Collection](/el-backend.postman_collection.json).
+Para hacer pruebas en postman: [Postman Collection](/docs/Postman/el-backend.postman_collection.json).
