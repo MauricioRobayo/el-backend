@@ -7,7 +7,7 @@ import { TmdbMovieMapper } from './trmdb-movie.mapper';
   imports: [
     HttpModule.registerAsync({
       useFactory: () => ({
-        baseURL: process.env.TMDB_BASE_API_URL,
+        baseURL: process.env.TMDB_API_BASE_URL,
         headers: {
           Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
         },
