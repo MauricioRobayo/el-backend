@@ -1,20 +1,18 @@
 import {
   Body,
   Controller,
-  Request,
   Param,
   Patch,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Users')
 @Controller('users')
