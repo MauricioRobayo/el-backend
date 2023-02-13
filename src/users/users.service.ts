@@ -14,8 +14,6 @@ import { Favorite } from './entities/favorite.entity';
 import { Note } from './entities/note.entity';
 import { User } from './entities/user.entity';
 import { isValidObjectId } from 'mongoose';
-import { UserDto } from './dto/user.dto';
-import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UsersService {
@@ -25,27 +23,21 @@ export class UsersService {
     @InjectModel(Favorite.name)
     private readonly favoritesModel: Model<Favorite>,
     private readonly moviesApiService: TmdbApiService,
-    private readonly userMapper: UserMapper,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const newUser = await this.usersModel.create(createUserDto);
-    return this.userMapper.mapUserToDto(newUser);
+  createUser(createUserDto: CreateUserDto) {
+    return this.usersModel.create(createUserDto);
   }
 
   async createNote(userId: string, createNoteDto: CreateNoteDto) {
-    if (!isValidObjectId(userId)) {
-      throw new BadRequestException(`Invalid user id '${userId}'`);
-    }
-
-    const user = await this.usersModel.findById(userId).exec();
+    const user = await this.usersModel.findOne({ userId }).exec();
     if (!user) {
       throw new NotFoundException(`User ${userId} not found`);
     }
 
     return this.notesModel.create({
       ...createNoteDto,
-      user: userId,
+      user: user._id,
     });
   }
 
@@ -54,8 +46,9 @@ export class UsersService {
     noteId: string,
     updateNoteDto: UpdateNoteDto,
   ) {
-    if (!isValidObjectId(userId)) {
-      throw new BadRequestException(`Invalid user id '${userId}'`);
+    const user = await this.usersModel.findOne({ userId }).exec();
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
     }
 
     if (!isValidObjectId(noteId)) {
@@ -64,7 +57,7 @@ export class UsersService {
 
     const updatedNote = await this.notesModel
       .findOneAndUpdate(
-        { _id: noteId, user: userId },
+        { _id: noteId, userId: user._id },
         { $set: updateNoteDto },
         { new: true },
       )
@@ -80,11 +73,7 @@ export class UsersService {
   }
 
   async createFavorite(userId: string, { movieId }: CreateFavoriteDto) {
-    if (!isValidObjectId(userId)) {
-      throw new BadRequestException(`Invalid user id '${userId}'`);
-    }
-
-    const user = await this.usersModel.findById(userId).exec();
+    const user = await this.usersModel.findOne({ userId }).exec();
     if (!user) {
       throw new NotFoundException(`User ${userId} not found`);
     }
@@ -95,6 +84,6 @@ export class UsersService {
       throw new NotFoundException(`Movie ${movieId} not found`);
     }
 
-    return this.favoritesModel.create({ user: userId, movie });
+    return this.favoritesModel.create({ user: user._id, movie });
   }
 }

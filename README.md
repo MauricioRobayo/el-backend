@@ -28,11 +28,10 @@ Para obtener el access token ir a https://www.themoviedb.org/settings/api y copi
 
 En el archivo `.env` pegar el access token para el valor de `TMDB_ACCESS_TOKEN`.
 
-3. Instalar pnpm y dependencias:
+3. Instalar dependencias:
 
 ```sh
-npm i -g pnpm
-pnpm install
+yarn install
 ```
 
 4. Levantar la imagen de MongoDB:
@@ -44,20 +43,18 @@ docker-compose up mongodb -d
 5. Iniciar el proyecto:
 
 ```sh
-pnpm run start
+yarn start
 ```
 
 ## Documentación de la API
 
-Una vez el proyecto esté corriendo, la documentación se puede consultar en http://localhost:3000/docs.
+Una vez el proyecto esté corriendo, documentación Swagger se puede consultar en http://localhost:3000/docs.
 
 ## Uso
 
 La aplicación permite consultar las películas más populares usando el endpoint: http://localhost:3000/movies/popular
 
 También se pueden buscar películas usando el endpoint: http://localhost:3000/movies/search?query=<PALABRA CLAVE DE BÚSQUEDA>
-
-Tome nota del `movieApiId` para la(s) películas de su interés, ya que se necesita para agregar la película a sus favoritos o crear notas.
 
 Ahora necesita un id de usuario (solo crea un usuario mock no se necesita body):
 

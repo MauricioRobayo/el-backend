@@ -3,7 +3,9 @@ import { AuthRegisterUserDto } from '../dto/auth-register-user.dto';
 import { AuthenticatedUserDto } from '../dto/authenticated-user.dto';
 
 export interface AuthService {
-  registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<void>;
+  registerUser(
+    authRegisterUserDto: AuthRegisterUserDto,
+  ): Promise<{ userId: string }>;
   authenticateUser(
     authLoginUserDto: AuthLoginUserDto,
   ): Promise<AuthenticatedUserDto>;

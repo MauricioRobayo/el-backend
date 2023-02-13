@@ -21,7 +21,9 @@ export class AwsCognitoService implements AuthService {
     });
   }
 
-  async registerUser(authRegisterUserDto: AuthRegisterUserDto): Promise<void> {
+  async registerUser(
+    authRegisterUserDto: AuthRegisterUserDto,
+  ): Promise<{ userId: string }> {
     const { name, email, password } = authRegisterUserDto;
 
     return new Promise((resolve, reject) => {
@@ -37,7 +39,7 @@ export class AwsCognitoService implements AuthService {
         [],
         (err, result) => {
           if (result) {
-            resolve();
+            resolve({ userId: result.userSub });
           } else {
             reject(err);
           }
